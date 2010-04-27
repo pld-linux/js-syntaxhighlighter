@@ -1,4 +1,3 @@
-%bcond_with	test	# install test.html
 Summary:	JavaScript syntax highlighter
 Summary(pl.UTF-8):	Podświetlacz składni napisany w JavaScript
 Name:		js-syntaxhighlighter
@@ -32,7 +31,7 @@ W pełni funkcjonalny podświetlacz składni napisany w języku JavaScipt.
 %prep
 %setup -qc
 
-# Apache1 conf
+# Apache 1.3/Apache 2.x config
 cat > apache.conf <<'EOF'
 Alias /js/syntaxhighlighter %{_appdir}
 <Directory %{_appdir}>
@@ -40,17 +39,17 @@ Alias /js/syntaxhighlighter %{_appdir}
 </Directory>
 EOF
 
-# lighttpd conf
+# Lighttpd config
 cat > lighttpd.conf <<'EOF'
 alias.url += (
-    "/js/syntaxhighlighter" => "%{_appdir}",
+	"/js/syntaxhighlighter" => "%{_appdir}",
 )
 EOF
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_appdir}
-cp -a %{?with_test:test.html} scripts styles $RPM_BUILD_ROOT%{_appdir}
+cp -a scripts styles $RPM_BUILD_ROOT%{_appdir}
 
 install -d $RPM_BUILD_ROOT%{_sysconfdir}
 cp -a apache.conf $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
@@ -80,6 +79,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
+%doc test.html
 %dir %attr(750,root,http) %{_sysconfdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd.conf
