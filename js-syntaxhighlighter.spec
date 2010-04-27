@@ -34,7 +34,7 @@ W pełni funkcjonalny podświetlacz składni napisany w języku JavaScipt.
 
 # Apache1 conf
 cat > apache.conf <<'EOF'
-Alias /js/syntaxhighlighter %{_appdir}/syntaxhighlighter
+Alias /js/syntaxhighlighter %{_appdir}
 <Directory %{_appdir}>
 	Allow from all
 </Directory>
@@ -43,7 +43,7 @@ EOF
 # lighttpd conf
 cat > lighttpd.conf <<'EOF'
 alias.url += (
-    "/js/syntaxhighlighter" => "%{_appdir}/syntaxhighlighter",
+    "/js/syntaxhighlighter" => "%{_appdir}",
 )
 EOF
 
