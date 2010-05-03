@@ -11,6 +11,7 @@ Source0:	http://execve.pl/PLD/%{name}-%{version}.zip
 # Source0-md5:	839d77b07b80e56965ebcfaf2a1186be
 URL:		http://alexgorbatchev.com/wiki/SyntaxHighlighter
 BuildRequires:	unzip
+BuildRequires:	yuicompressor
 Requires:	webapps
 Requires:	webserver(alias)
 BuildArch:	noarch
@@ -46,10 +47,18 @@ alias.url += (
 )
 EOF
 
+mkdir build
+cp -a scripts styles build
+
+%build
+for I in scripts/*.js styles/*.css; do
+	yuicompressor $I > build/$I
+done
+
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_appdir}
-cp -a scripts styles $RPM_BUILD_ROOT%{_appdir}
+cp -a build/{scripts,styles} $RPM_BUILD_ROOT%{_appdir}
 
 install -d $RPM_BUILD_ROOT%{_sysconfdir}
 cp -a apache.conf $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
