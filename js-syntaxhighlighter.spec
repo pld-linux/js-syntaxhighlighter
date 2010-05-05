@@ -10,6 +10,7 @@ Group:		Applications/WWW
 Source0:	http://execve.pl/PLD/%{name}-%{version}.zip
 # Source0-md5:	839d77b07b80e56965ebcfaf2a1186be
 URL:		http://alexgorbatchev.com/wiki/SyntaxHighlighter
+BuildRequires:	js
 BuildRequires:	unzip
 BuildRequires:	yuicompressor
 Requires:	webapps
@@ -51,8 +52,12 @@ mkdir build
 cp -a scripts styles build
 
 %build
-for I in scripts/*.js styles/*.css; do
-	yuicompressor $I > build/$I
+for a in styles/*.css; do
+	yuicompressor $a > build/$a
+done
+for a in scripts/*.js; do
+	yuicompressor --charset UTF-8 $a > build/$a
+	js -C -f build/$a
 done
 
 %install
