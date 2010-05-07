@@ -2,7 +2,7 @@ Summary:	JavaScript syntax highlighter
 Summary(pl.UTF-8):	Podświetlacz składni napisany w JavaScript
 Name:		js-syntaxhighlighter
 Version:	2.1.364
-Release:	2
+Release:	3
 License:	LGPL v3
 Group:		Applications/WWW
 # Use distfile or sth, cause DF does not like question mark in URL.
