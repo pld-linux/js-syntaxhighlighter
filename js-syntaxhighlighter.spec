@@ -2,7 +2,7 @@ Summary:	JavaScript syntax highlighter
 Summary(pl.UTF-8):	Podświetlacz składni napisany w JavaScript
 Name:		js-syntaxhighlighter
 Version:	2.1.364
-Release:	3
+Release:	4
 License:	LGPL v3
 Group:		Applications/WWW
 # Use distfile or sth, cause DF does not like question mark in URL.
@@ -15,6 +15,7 @@ BuildRequires:	unzip
 BuildRequires:	yuicompressor
 Requires:	webapps
 Requires:	webserver(alias)
+Conflicts:	apache-base < 2.4.0-1
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -33,11 +34,19 @@ W pełni funkcjonalny podświetlacz składni napisany w języku JavaScipt.
 %prep
 %setup -qc
 
-# Apache 1.3/Apache 2.x config
+# Apache 1.3 config
 cat > apache.conf <<'EOF'
 Alias /js/syntaxhighlighter %{_appdir}
 <Directory %{_appdir}>
 	Allow from all
+</Directory>
+EOF
+
+# Apache 2.4 config
+cat > httpd.conf <<'EOF'
+Alias /js/syntaxhighlighter %{_appdir}
+<Directory %{_appdir}>
+	Require all granted
 </Directory>
 EOF
 
@@ -67,7 +76,7 @@ cp -a build/{scripts,styles} $RPM_BUILD_ROOT%{_appdir}
 
 install -d $RPM_BUILD_ROOT%{_sysconfdir}
 cp -a apache.conf $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
-cp -a apache.conf $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
+cp -a httpd.conf $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
 cp -a lighttpd.conf $RPM_BUILD_ROOT%{_sysconfdir}/lighttpd.conf
 
 %clean
@@ -79,10 +88,10 @@ rm -rf $RPM_BUILD_ROOT
 %triggerun -- apache1 < 1.3.37-3, apache1-base
 %webapp_unregister apache %{_webapp}
 
-%triggerin -- apache < 2.2.0, apache-base
+%triggerin -- apache-base
 %webapp_register httpd %{_webapp}
 
-%triggerun -- apache < 2.2.0, apache-base
+%triggerun -- apache-base
 %webapp_unregister httpd %{_webapp}
 
 %triggerin -- lighttpd
